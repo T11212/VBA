@@ -1,0 +1,18 @@
+Sub RenameTablesToFirstValue()
+    Dim ws As Worksheet
+    Dim tbl As ListObject
+    Dim rng As Range
+    
+    ' Loop through each worksheet in the workbook
+    For Each ws In ThisWorkbook.Worksheets
+        ' Loop through each table in the worksheet
+        For Each tbl In ws.ListObjects
+            ' Get the first value in the table's data body range
+            Set rng = tbl.DataBodyRange
+            If Not rng Is Nothing And rng.Cells.Count > 0 Then
+                ' Rename the table to the first value
+                tbl.Name = rng.Cells(1).Value
+            End If
+        Next tbl
+    Next ws
+End Sub
