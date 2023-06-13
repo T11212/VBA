@@ -1,0 +1,18 @@
+Sub RenameTablesToFirstColumnName()
+    Dim ws As Worksheet
+    Dim tbl As ListObject
+    Dim firstColumn As Range
+    
+    ' Loop through each worksheet in the workbook
+    For Each ws In ThisWorkbook.Worksheets
+        ' Loop through each table in the worksheet
+        For Each tbl In ws.ListObjects
+            ' Get the first column of the table
+            Set firstColumn = tbl.HeaderRowRange.Cells(1)
+            If Not firstColumn Is Nothing Then
+                ' Rename the table to the first column name
+                tbl.Name = firstColumn.Value
+            End If
+        Next tbl
+    Next ws
+End Sub
