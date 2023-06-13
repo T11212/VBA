@@ -1,0 +1,19 @@
+Sub SetTabNameAndResizeTables()
+    Dim ws As Worksheet
+    Dim tbl As ListObject
+    Dim rng As Range
+    
+    ' Loop through each worksheet in the workbook
+    For Each ws In ThisWorkbook.Worksheets
+        ' Set worksheet name to the value in cell A1
+        ws.Name = ws.Range("A1").Value
+        
+        ' Loop through each table in the worksheet
+        For Each tbl In ws.ListObjects
+            ' Resize the table to display all data
+            Set rng = tbl.Range
+            rng.Resize(rng.Rows.Count + tbl.HeaderRowRange.Row - rng.Row).EntireRow.AutoFit
+            rng.Resize(rng.Columns.Count + tbl.HeaderRowRange.Column - rng.Column).EntireColumn.AutoFit
+        Next tbl
+    Next ws
+End Sub
