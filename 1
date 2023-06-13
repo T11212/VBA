@@ -1,0 +1,48 @@
+Sub ExtractTablesToNewWorkbook()
+    Dim sourceWorkbook As Workbook
+    Dim newWorkbook As Workbook
+    Dim sourceWorksheet As Worksheet
+    Dim newWorksheet As Worksheet
+    Dim table As ListObject
+    Dim tableName As String
+    Dim sourceFilePath As Variant
+    
+    ' Allow the user to select the source workbook
+    sourceFilePath = Application.GetOpenFilename("Excel Files (*.xlsx;*.xls),*.xlsx;*.xls")
+    
+    If sourceFilePath <> False Then
+        ' Open the source workbook
+        Set sourceWorkbook = Workbooks.Open(sourceFilePath)
+        
+        ' Create a new workbook
+        Set newWorkbook = Workbooks.Add
+        
+        ' Loop through each worksheet in the source workbook
+        For Each sourceWorksheet In sourceWorkbook.Worksheets
+            ' Loop through each table in the worksheet
+            For Each table In sourceWorksheet.ListObjects
+                tableName = table.Name
+                
+                ' Add a new worksheet to the new workbook
+                Set newWorksheet = newWorkbook.Worksheets.Add
+                newWorksheet.Name = tableName
+                
+                ' Copy the table data to the new worksheet
+                table.Range.Copy Destination:=newWorksheet.Range("A1")
+            Next table
+        Next sourceWorksheet
+        
+        ' Save the new workbook with extracted tables
+        newWorkbook.SaveAs "Path\to\save\new_workbook.xlsx" ' Change the path and filename
+        
+        ' Close the new workbook
+        newWorkbook.Close
+        
+        ' Close the source workbook without saving changes
+        sourceWorkbook.Close False
+        
+        MsgBox "Tables have been extracted to a new workbook."
+    Else
+        MsgBox "No file selected. Operation cancelled."
+    End If
+End Sub
