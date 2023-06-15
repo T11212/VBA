@@ -1,0 +1,17 @@
+Sub ReplaceSpacesWithUnderscores()
+    Dim ws As Worksheet
+    Dim tbl As ListObject
+    Dim headerCell As Range
+    
+    ' Loop through each worksheet in the workbook
+    For Each ws In ThisWorkbook.Worksheets
+        ' Loop through each table in the worksheet
+        For Each tbl In ws.ListObjects
+            ' Loop through each header cell in the table
+            For Each headerCell In tbl.HeaderRowRange.Cells
+                ' Replace spaces with underscores in the column names
+                headerCell.Value = Replace(headerCell.Value, " ", "_")
+            Next headerCell
+        Next tbl
+    Next ws
+End Sub
