@@ -1,0 +1,32 @@
+Sub UpdateTables()
+    Dim ws As Worksheet
+    Dim tbl As ListObject
+    Dim newCol As Range
+    
+    ' Loop through each worksheet in the workbook
+    For Each ws In ThisWorkbook.Worksheets
+        ' Loop through each table in the worksheet
+        For Each tbl In ws.ListObjects
+            ' Check if the table already has a column named "Version"
+            If Not ColumnExists(tbl, "Version") Then
+                ' Add a new column to the table
+                Set newCol = tbl.ListColumns.Add
+                newCol.Name = "Version"
+                
+                ' Populate the new column with "V1"
+                newCol.DataBodyRange.Value = "V1"
+            End If
+        Next tbl
+    Next ws
+End Sub
+
+Function ColumnExists(tbl As ListObject, colName As String) As Boolean
+    Dim col As ListColumn
+    For Each col In tbl.ListColumns
+        If col.Name = colName Then
+            ColumnExists = True
+            Exit Function
+        End If
+    Next col
+    ColumnExists = False
+End Function
