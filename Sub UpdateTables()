@@ -1,37 +1,27 @@
-Sub UpdateTables()
+Sub CreateSecondVersionForTables()
     Dim ws As Worksheet
-    Dim tbl As Object ' Use Object type to handle any type of table
-    Dim newCol As Range
+    Dim tbl As ListObject
+    Dim newCol As ListColumn
+    Dim rowCount As Long
+    Dim i As Long
     
-    ' Loop through each worksheet in the workbook
     For Each ws In ThisWorkbook.Worksheets
-        ' Loop through each table in the worksheet
         For Each tbl In ws.ListObjects
-            ' Check if the table is a ListObject
-            If TypeName(tbl) = "ListObject" Then
-                On Error Resume Next
-                ' Check if the table already has a column named "Version"
-                If Not ColumnExists(tbl, "Version") Then
-                    ' Add a new column to the table
-                    Set newCol = tbl.ListColumns.Add
-                    newCol.Name = "Version"
-                    
-                    ' Populate the new column with "V1"
-                    newCol.DataBodyRange.Value = "V1"
-                End If
-                On Error GoTo 0
-            End If
+            Set newCol = tbl.ListColumns.Add
+            newCol.Name = "Version"
+            rowCount = tbl.DataBodyRange.Rows.Count
+            
+            ' Update existing rows
+            For i = 1 To rowCount
+                tbl.DataBodyRange.Cells(i, newCol.Index).Value = "v1"
+            Next i
+            
+            ' Add new rows with updated values
+            For i = 1 To rowCount
+                tbl.ListRows.Add AlwaysInsert:=True
+                tbl.DataBodyRange.Cells(rowCount + i, newCol.Index).Value = "v2"
+                tbl.DataBodyRange.Cells(rowCount + i, 2).Resize(, tbl.ListColumns.Count - 1).Value = 1
+            Next i
         Next tbl
     Next ws
 End Sub
-
-Function ColumnExists(tbl As ListObject, colName As String) As Boolean
-    Dim col As ListColumn
-    For Each col In tbl.ListColumns
-        If col.Name = colName Then
-            ColumnExists = True
-            Exit Function
-        End If
-    Next col
-    ColumnExists = False
-End Function
