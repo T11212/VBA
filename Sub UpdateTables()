@@ -1,20 +1,23 @@
 Sub UpdateTables()
     Dim ws As Worksheet
-    Dim tbl As ListObject
+    Dim tbl As Object ' Use Object type to handle any type of table
     Dim newCol As Range
     
     ' Loop through each worksheet in the workbook
     For Each ws In ThisWorkbook.Worksheets
         ' Loop through each table in the worksheet
         For Each tbl In ws.ListObjects
-            ' Check if the table already has a column named "Version"
-            If Not ColumnExists(tbl, "Version") Then
-                ' Add a new column to the table
-                Set newCol = tbl.ListColumns.Add
-                newCol.Name = "Version"
-                
-                ' Populate the new column with "V1"
-                newCol.DataBodyRange.Value = "V1"
+            ' Check if the table is a ListObject
+            If TypeName(tbl) = "ListObject" Then
+                ' Check if the table already has a column named "Version"
+                If Not ColumnExists(tbl, "Version") Then
+                    ' Add a new column to the table
+                    Set newCol = tbl.ListColumns.Add
+                    newCol.Name = "Version"
+                    
+                    ' Populate the new column with "V1"
+                    newCol.DataBodyRange.Value = "V1"
+                End If
             End If
         Next tbl
     Next ws
