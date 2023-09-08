@@ -1,0 +1,32 @@
+Sub MarkDuplicates()
+    Dim lastRow As Long
+    Dim i As Long
+    Dim dict As Object
+    Dim cellValue As Variant
+    Dim counter As Long
+    
+    ' Initialize dictionary object
+    Set dict = CreateObject("Scripting.Dictionary")
+    
+    ' Find the last row with data in column A (Change the column letter if needed)
+    lastRow = Cells(Rows.Count, "A").End(xlUp).Row
+    
+    ' Loop through each cell in column A
+    For i = 1 To lastRow
+        cellValue = Cells(i, 1).Value
+        
+        ' Check if the value already exists in dictionary
+        If dict.Exists(cellValue) Then
+            ' Increment the counter for that value
+            dict(cellValue) = dict(cellValue) + 1
+        Else
+            ' Initialize counter for new value
+            dict(cellValue) = 1
+        End If
+        
+        ' If counter is greater than 1, mark as duplicate in column B
+        If dict(cellValue) > 1 Then
+            Cells(i, 2).Value = "duplicate" & dict(cellValue)
+        End If
+    Next i
+End Sub
